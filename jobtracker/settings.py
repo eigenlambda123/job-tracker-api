@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # apps
     'users',
+    'job_applications',
 
     
 ]
