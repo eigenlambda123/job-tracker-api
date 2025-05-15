@@ -42,5 +42,9 @@ class JobApplicationDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return JobApplication.objects.all()
+
         # Return only job applications created by the currently authenticated user
-        return JobApplication.objects.filter(user=self.request.user)
+        return JobApplication.objects.filter(user=user)
