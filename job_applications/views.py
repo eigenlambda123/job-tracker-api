@@ -24,8 +24,12 @@ class JobApplicationListCreateView(ListCreateAPIView):
 
 
     def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return JobApplication.objects.all()
+
         # Return only job applications created by the currently authenticated user
-        return JobApplication.objects.filter(user=self.request.user)
+        return JobApplication.objects.filter(user=user)
 
     def perform_create(self, serializer):
         # Automatically associate the logged-in user with the new job application
