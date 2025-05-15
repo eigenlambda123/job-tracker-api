@@ -1,4 +1,5 @@
-from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from .models import JobApplication
@@ -8,6 +9,19 @@ from .permissions import IsOwnerOrReadOnly
 class JobApplicationListCreateView(ListCreateAPIView):
     serializer_class = JobApplicationSerializer
     permission_classes = [IsAuthenticated]
+
+     # Add filter backends here — this enables filtering, searching, ordering in this view
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+
+    # Fields allowed for filtering via query params, e.g. ?status=pending
+    filterset_fields = ['status']
+
+    # Fields that the user can search text in, e.g. ?search=google
+    search_fields = ['company', 'position']
+
+    # Fields allowed for ordering, e.g. ?ordering=applied_date or ?ordering=-applied_date
+    ordering_fields = ['applied_date']
+
 
     def get_queryset(self):
         # Return only job applications created by the currently authenticated user
